@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+.env.*
+*.key
+*.token
+
+# Hugging Face cache
+.cache/
+huggingface/
+
+# Training checkpoints
+output/*/checkpoint-*/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
