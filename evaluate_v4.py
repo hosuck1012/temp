@@ -26,10 +26,21 @@ LABELS = ["HIGH", "MEDIUM", "LOW"]
 
 print("\nTokenizer 로딩...")
 
-tokenizer = AutoTokenizer.from_pretrained(V4_ADAPTER)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
+
+# V4 학습과 동일하게 DeepSeek-R1의 generation-only <think> prefix를 제거한다.
+reasoning_generation_prefix = "<｜Assistant｜><think>\\n"
+
+if reasoning_generation_prefix not in tokenizer.chat_template:
+    raise RuntimeError("DeepSeek-R1 chat template의 <think> 생성 prefix를 찾지 못했습니다.")
+
+tokenizer.chat_template = tokenizer.chat_template.replace(
+    reasoning_generation_prefix,
+    "<｜Assistant｜>",
+)
 
 
 print("\n===== Label Tokenization =====")
