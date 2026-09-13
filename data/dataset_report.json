@@ -1,0 +1,31 @@
+{
+  "train": {
+    "rows": 300,
+    "labels": {
+      "HIGH": 100,
+      "MEDIUM": 100,
+      "LOW": 100
+    }
+  },
+  "validation": {
+    "rows": 60,
+    "labels": {
+      "HIGH": 20,
+      "MEDIUM": 20,
+      "LOW": 20
+    }
+  },
+  "test": {
+    "rows": 60,
+    "labels": {
+      "HIGH": 20,
+      "MEDIUM": 20,
+      "LOW": 20
+    }
+  },
+  "runtime": {
+    "rows": 30,
+    "labels": "unlabeled"
+  },
+  "keyword_overlap_between_labeled_splits": 0
+}
