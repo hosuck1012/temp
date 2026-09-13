@@ -26,12 +26,14 @@ DeepSeek-R1-Distill-Qwen-1.5B를 기반으로 한국어 트렌드 키워드와 �
 
 ## 데이터
 
-현재 데이터셋은 실제 최신 트렌드의 정답 데이터가 아니라 분류 구조와 파인튜닝 과정을 검증하기 위해 만든 합성 데이터입니다.
+실험에 사용한 데이터는 실제 최신 트렌드 정답 데이터가 아니라 분류 구조와 파인튜닝 과정을 검증하기 위해 만든 합성 데이터입니다.
 
 - Train: 300개
 - Validation: 60개
 - Test: 60개
 - 각 분할은 HIGH / MEDIUM / LOW가 균형을 이루도록 구성
+
+현재 공개 포트폴리오 스냅샷에는 검증/테스트/런타임 예시와 데이터셋 설계 문서를 포함하고, 전체 300개 학습 원본은 저장소 용량·정리 목적상 별도 보관 대상으로 두었습니다.
 
 따라서 아래 성능은 합성 테스트셋에 대한 controlled benchmark이며, 실제 최신 트렌드에서 동일한 정확도를 보장하지 않습니다.
 
@@ -81,8 +83,17 @@ Actual L     0   1  19
 - `train_qlora_v4.py`: 최종 QLoRA 학습 코드
 - `evaluate_v4.py`: Original vs V4 평가
 - `demo_llm.py`: 입력한 키워드/문맥을 Original과 V4로 비교하는 데모
-- `data/`: 합성 train/validation/test 데이터셋
+- `data/`: 합성 데이터 설명, 검증/테스트/런타임 샘플
 - `docs/experiment_history.md`: V1~V4 실험 과정과 디버깅 기록
+- `output/trend-travel-deepseek-qlora-v4/`: Adapter 설정 및 수정된 chat template 문서
+
+## 모델 아티팩트 보관 정책
+
+원본 DeepSeek 가중치와 중간 checkpoint는 저장소에 포함하지 않습니다. 원본 모델은 Hugging Face에서 다시 내려받습니다.
+
+또한 실제 학습된 `adapter_model.safetensors` 바이너리(약 4.2 MiB)는 이 소스 중심 포트폴리오 스냅샷에 직접 포함하지 않았습니다. 해당 폴더의 README에 로컬 파일 크기와 SHA-256을 기록했습니다. **재학습 없이 정확히 같은 V4를 복원하려면 이 adapter 바이너리를 별도로 보관해야 합니다.**
+
+평가/데모 스크립트는 원본 모델 tokenizer를 다시 불러온 뒤 V4 학습과 동일하게 `<think>` generation prefix를 제거하도록 구성해, 대형 `tokenizer.json`을 저장소에 중복 저장하지 않습니다.
 
 ## 실행 개요
 
@@ -92,7 +103,7 @@ python evaluate_v4.py
 python demo_llm.py compare
 ```
 
-원본 모델 가중치는 저장소에 포함하지 않습니다. Hugging Face에서 다시 내려받도록 코드에 모델 이름을 명시했습니다.
+`evaluate_v4.py`와 `demo_llm.py`에서 V4를 실제 로드하려면 `output/trend-travel-deepseek-qlora-v4/adapter_model.safetensors`가 필요합니다.
 
 ## 한계 및 다음 단계
 
